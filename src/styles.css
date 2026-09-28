@@ -180,7 +180,21 @@ body {
   flex: none;
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
+  /*
+   * Sin `wrap` a proposito, y es el detalle que arregla el movil.
+   *
+   * Con `flex-wrap: wrap` los elementos saltan de linea ANTES de encogerse: la
+   * marca se queda con su ancho entero, el selector de idioma no cabe y se va
+   * debajo, y el encabezado queda con un bloque de texto arriba y un control
+   * suelto abajo, que es justo lo que se veia mal. Sin wrap, el navegador
+   * encoge primero la marca, que para eso lleva `min-width: 0`, y el lema se
+   * recorta con puntos suspensivos en vez de empujar.
+   *
+   * Encoger es seguro porque el unico contenido que puede encogerse es el lema,
+   * que tiene `text-overflow: ellipsis`, y el nombre de la marca y el selector
+   * llevan `flex: none` para que no se deformen.
+   */
+  flex-wrap: nowrap;
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
@@ -193,6 +207,18 @@ body {
   display: flex;
   gap: 0.75rem;
   align-items: center;
+  /*
+   * `min-width: 0` es lo que permite que este bloque se encoja. Un elemento
+   * flex tiene `min-width: auto` por defecto, o sea que no baja nunca del
+   * tamaño de su contenido: con el lema al lado, la marca medía su ancho entero
+   * y empujaba el selector de idioma a una segunda línea, donde se quedaba
+   * colgando a la izquierda y el encabezado parecía roto en cualquier móvil.
+   */
+  min-width: 0;
+}
+
+.marca > div {
+  min-width: 0;
 }
 
 .marca-logo {
@@ -205,12 +231,24 @@ body {
   margin: 0;
   font-size: 1.5rem;
   letter-spacing: -0.02em;
+  /* El nombre nunca se parte ni se recorta: es lo unico que identifica la marca. */
+  white-space: nowrap;
 }
 
 .marca p {
   margin: 0;
   color: var(--tenue);
   font-size: 0.875rem;
+  /*
+   * El lema se recorta con puntos suspensivos en vez de romper el encabezado.
+   * Con un movil de 360 px no caben el lema entero y el selector de idioma, y de
+   * los dos uno tiene que ceder: el selector es un control, el lema es texto
+   * decorativo. Antes de esto el lema empujaba el selector a otra línea y
+   * quedaba solo a la izquierda, que es lo que se veía mal.
+   */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cabecera-acciones {
@@ -218,6 +256,9 @@ body {
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
+  /* Que no se encoja ni se reparta: el selector se queda a la derecha siempre. */
+  flex: none;
+  margin-left: auto;
 }
 
 .distintivos {
@@ -241,11 +282,21 @@ body {
   white-space: nowrap;
 }
 
+/*
+ * Selector de idioma.
+ *
+ * Se muestra como un solo control con los dos idiomas pegados, y no como dos
+ * botones sueltos: es una eleccion, no dos acciones. En movil se estrecha un
+ * poco para dejarle sitio a la marca, porque los dos van en la misma linea y
+ * el espacio es el recurso escaso.
+ */
 .idioma {
   display: flex;
   border: 1px solid var(--borde);
   border-radius: var(--radio);
   overflow: hidden;
+  background: var(--panel);
+  flex: none;
 }
 
 .idioma button {
@@ -255,7 +306,15 @@ body {
   padding: 0.4rem 0.7rem;
   font: inherit;
   font-size: 0.8125rem;
+  white-space: nowrap;
   cursor: pointer;
+}
+
+@media (max-width: 30rem) {
+  .idioma button {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.75rem;
+  }
 }
 
 .idioma button[aria-pressed="true"] {

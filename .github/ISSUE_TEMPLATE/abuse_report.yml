@@ -1,0 +1,54 @@
+name: Denuncia de código QR abusivo
+description: Alguien generó con esta herramienta un código de phishing, de robo de credenciales o de reparto de malware.
+title: "[Abuso] "
+labels: ["abuso"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por avisar. Esta plantilla es para denunciar un **código QR
+        concreto** que se está usando para engañar a alguien.
+
+        ### Qué se necesita
+
+        - **El hash SHA-256 del contenido**, no el contenido. Si no lo tienes,
+          puedes generarlo con `sha256sum` o con un hash de la URL de destino.
+        - Qué viste exactamente: a dónde lleva el código, qué pide y a quién.
+
+        **No pegues aquí el contenido del QR.** Podría contener datos
+        personales de terceros que no te pertenecen, y la denuncia es pública.
+  - type: input
+    id: hash
+    attributes:
+      label: Hash SHA-256 del contenido
+      placeholder: 3f786850e387550fdab836ed7e6dc881de23001b
+    validations:
+      required: true
+  - type: textarea
+    id: destination
+    attributes:
+      label: ¿A dónde lleva el código?
+      description: La URL o el número de teléfono al que apunta, si lo viste.
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Qué ha pasado
+      description: Qué pide el código y qué ha ocurrido al escanearlo.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencia
+      description: Capturas o enlaces. Opcional, pero acelera la investigación.
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmación
+      options:
+        - label: He leído que esta denuncia es pública y no incluyo datos personales en ella.
+          required: true

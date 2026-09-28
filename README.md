@@ -97,7 +97,7 @@ gratuta que se acaba.
 
 ## Empezar a usarlo
 
-Solo entra en <https://efimero.vercel.app> y ya funciona. Puedes añadirlo a la
+Solo entra en <https://efimero-qr.vercel.app> y ya funciona. Puedes añadirlo a la
 pantalla de inicio y se abrirá sin barra de navegador.
 
 ## Compilar desde el código

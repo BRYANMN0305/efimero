@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Problema o sugerencia
+    url: https://github.com/BRYANMN0305/efimero/issues/new
+    about: Un fallo, una idea o algo que no se comporta como debería.
+  - name: Aviso de seguridad privado
+    url: https://github.com/BRYANMN0305/efimero/security/advisories/new
+    about: Una vulnerabilidad. Se abre un aviso privado, no una incidencia pública.
