@@ -79,7 +79,9 @@ que se ve nítido a cualquier tamaño y pesa poco.
   almacenamiento local del navegador. Puedes borrarlo cuando quieras.
 - La página se sirve con `connect-src 'none'`: no es una promesa, es una
   restricción que aplica el propio navegador. Un guard comprueba en cada
-  compilación que el código publicado no contiene ninguna API de red.
+  compilación que el código publicado no contiene ninguna API de red —ni
+  `fetch`, ni `XMLHttpRequest`, ni `WebSocket`—, y ese guard lee el bundle ya
+  compilado, así que también caza lo que se cuele por una dependencia.
 - Código abierto bajo licencia MIT. Puedes leer exactamente lo que hace.
 
 El detalle está en [`PRIVACY.md`](PRIVACY.md).

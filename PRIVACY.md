@@ -42,9 +42,14 @@ puede recuperar: en el momento en que recargas la página, desaparece.
 La página se sirve con una política de seguridad de contenido (CSP) que incluye
 `connect-src 'none'`. Eso no es una promesa: es una restricción que aplica el
 propio navegador y que impide técnicamente que el código de la página realice
-cualquier petición de red. Un guard del repositorio
-(`scripts/check-no-network.mjs`) comprueba en cada compilación que el código
-publicado no contiene ninguna API de red.
+cualquier petición de red, ni a un tercero ni a uno mismo. No hay ninguna
+excepción: la lista de destinos permitidos está vacía.
+
+Un guard del repositorio (`scripts/check-no-network.mjs`) comprueba además, en
+cada compilación y leyendo el bundle ya compilado, que el código no contiene
+ninguna API de red —ni `fetch`, ni `XMLHttpRequest`, ni `WebSocket`, ni
+`EventSource`, ni `sendBeacon`—. Así también se detecta lo que se cuele por una
+dependencia sin que nadie lo note al leer el repositorio.
 
 Los códigos se generan en tu equipo y se descargan como archivo. El sitio no
 sabe qué contienen.

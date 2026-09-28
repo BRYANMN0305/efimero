@@ -22,10 +22,17 @@ export const BRAND = {
 export const REPO_OWNER = 'BRYANMN0305';
 export const REPO_NAME = 'efimero';
 
-/** URLs publicas. En desarrollo apuntan al repo; en produccion se redeployan. */
+/**
+ * URLs publicas.
+ *
+ * `canonical` se resuelve al compilar, no se escribe aqui. Con un literal
+ * apunta a un dominio que Vercel puede reasignar a otra persona en cualquier
+ * momento, y eso no da ningun error: simplemente el ejemplo acabaria
+ * apuntando al sitio de un tercero. Se documenta en `scripts/build-info.mjs`.
+ */
 export const URLS = {
-  /** Dominio canonic. Con `*.vercel.app` no hay dominio propio todavia. */
-  canonical: 'https://efimero.vercel.app',
+  /** Direccion del sitio ya desplegada. */
+  canonical: __APP_SITE_URL__,
   repo: `https://github.com/${REPO_OWNER}/${REPO_NAME}`,
   issues: `https://github.com/${REPO_OWNER}/${REPO_NAME}/issues`,
   /** Plantilla de denuncia de QR abusivo. Solo recibe un hash SHA-256 del

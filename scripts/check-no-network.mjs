@@ -194,7 +194,7 @@ if (problems.length > 0) {
 }
 
 console.log(
-  `Sin red en ${files.length} archivo(s) de dist/. ` +
+  `Sin APIs de red en el codigo de la aplicacion (${files.length} archivo(s) de dist/). ` +
     `Almacenamiento: ${storageMentions} mencion(es) a localStorage, ` +
     `claves de fuente: ${[...ALLOWED_STORAGE_KEYS].join(', ')}.`,
 );
