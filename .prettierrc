@@ -1,0 +1,18 @@
+{
+  "printWidth": 130,
+  "singleQuote": true,
+  "semi": true,
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": ["*.html", "*.css", "*.json", "*.md", "*.yml", "*.yaml", "*.svg"],
+      "options": { "singleQuote": false }
+    },
+    {
+      "files": ["package-lock.json"],
+      "options": { "printWidth": 10000 }
+    }
+  ]
+}

@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Efímero · Códigos QR para tu marca, que no caducan</title>
+    <meta
+      name="description"
+      content="Crea códigos QR con tu logo y tus colores, y comprueba antes de imprimir que se van a leer. Sin cuentas, sin servidor y sin enviar nada."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="referrer" content="no-referrer" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+    <header class="cabecera">
+      <div class="marca">
+        <svg class="marca-logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect x="1" y="1" width="13" height="13" rx="2" fill="currentColor" />
+          <rect x="18" y="1" width="13" height="13" rx="2" fill="currentColor" />
+          <rect x="1" y="18" width="13" height="13" rx="2" fill="currentColor" />
+          <rect x="5" y="5" width="5" height="5" rx="1" fill="var(--fondo)" />
+          <rect x="22" y="5" width="5" height="5" rx="1" fill="var(--fondo)" />
+          <rect x="5" y="22" width="5" height="5" rx="1" fill="var(--fondo)" />
+          <rect x="18" y="18" width="5" height="5" rx="2" fill="currentColor" />
+          <rect x="26" y="18" width="5" height="5" rx="2" fill="currentColor" />
+          <rect x="18" y="26" width="5" height="5" rx="2" fill="currentColor" />
+          <rect x="26" y="26" width="5" height="5" rx="2" fill="currentColor" />
+        </svg>
+        <div>
+          <h1 id="marca-nombre">Efímero</h1>
+          <p id="marca-lema">Generador de códigos QR estático y abierto</p>
+        </div>
+      </div>
+
+      <div class="cabecera-acciones">
+        <div class="idioma" role="group" aria-label="Idioma">
+          <button type="button" id="idioma-es" data-locale="es" aria-pressed="true">Español</button>
+          <button type="button" id="idioma-en" data-locale="en" aria-pressed="false">English</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <!--
+        Hero. Va antes que el conversor y no en la cabecera porque el titulo
+        comercial no es el nombre de la aplicacion: "Efímero" es la marca y esta
+        en la esquina, y esto es lo que vende. Un solo titular grande centrado
+        dice mas que una barra de distintivos.
+      -->
+      <section class="hero" aria-labelledby="hero-titulo">
+        <h1 id="hero-titulo">Tu código QR, para siempre</h1>
+        <p id="hero-descripcion"></p>
+        <ul class="distintivos" aria-label="Características">
+          <li id="distintivo-abierto">Código abierto</li>
+          <li id="distintivo-sin-servidor">Sin servidor</li>
+          <li id="distintivo-sin-cuenta">Sin cuenta</li>
+          <li id="distintivo-sin-caducidad">Sin caducidad</li>
+          <li id="distintivo-offline">Funciona sin conexión</li>
+        </ul>
+      </section>
+
+      <!-- Aviso de esquema peligroso. Rellena el texto desde el codigo. -->
+      <div class="bloqueo" id="bloqueo" hidden role="alert" aria-labelledby="bloqueo-titulo">
+        <h2 id="bloqueo-titulo">No se puede generar</h2>
+        <p id="bloqueo-esquema"></p>
+        <p id="bloqueo-cuerpo"></p>
+        <p id="bloqueo-consejo"></p>
+      </div>
+
+      <div class="disposicion">
+        <!-- ------------------------------------------------------------- -->
+        <!-- Columna de entradas                                               -->
+        <!-- ------------------------------------------------------------- -->
+        <div class="controles">
+          <section class="panel" aria-labelledby="titulo-contenido">
+            <h2 id="titulo-contenido">Qué quieres codificar</h2>
+            <div class="ayuda">
+              <button type="button" class="ayuda-boton" aria-describedby="ayuda-contenido">
+                <span aria-hidden="true">?</span>
+              </button>
+              <div class="ayuda-texto" id="ayuda-contenido" role="tooltip"></div>
+            </div>
+            <div class="pestanias" id="pestanias" role="tablist" aria-label="Tipo de contenido"></div>
+            <div class="campos" id="campos" role="tabpanel" aria-labelledby="titulo-contenido"></div>
+            <p class="pista" id="pista" role="status"></p>
+          </section>
+
+          <section class="panel" aria-labelledby="titulo-estilo">
+            <h2 id="titulo-estilo">Estilo</h2>
+            <div class="ayuda">
+              <button type="button" class="ayuda-boton" aria-describedby="ayuda-estilo"><span aria-hidden="true">?</span></button>
+              <div class="ayuda-texto" id="ayuda-estilo" role="tooltip"></div>
+            </div>
+
+            <div class="campo">
+              <label for="preajuste">Preajuste</label>
+              <select id="preajuste"></select>
+            </div>
+
+            <div class="campo-par">
+              <div class="campo">
+                <label for="color-texto">Color del código</label>
+                <input type="color" id="color-texto" value="#000000" />
+              </div>
+              <div class="campo">
+                <label for="color-fondo">Color de fondo</label>
+                <input type="color" id="color-fondo" value="#ffffff" />
+              </div>
+            </div>
+
+            <div class="campo-par">
+              <div class="campo">
+                <label for="forma-modulos">Módulos</label>
+                <select id="forma-modulos"></select>
+              </div>
+              <div class="campo">
+                <label for="forma-localizadores">Esquinas</label>
+                <select id="forma-localizadores"></select>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="titulo-opciones">
+            <h2 id="titulo-opciones">Opciones</h2>
+            <div class="ayuda">
+              <button type="button" class="ayuda-boton" aria-describedby="ayuda-opciones">
+                <span aria-hidden="true">?</span>
+              </button>
+              <div class="ayuda-texto" id="ayuda-opciones" role="tooltip"></div>
+            </div>
+            <div class="campo-par">
+              <div class="campo">
+                <label for="correccion">Corrección de errores</label>
+                <select id="correccion"></select>
+              </div>
+              <div class="campo">
+                <label for="zona-silenciosa">Zona silenciosa</label>
+                <input type="number" id="zona-silenciosa" min="0" max="8" step="1" value="4" />
+              </div>
+            </div>
+            <div class="campo-par">
+              <div class="campo">
+                <label for="tamano-visualizacion">Tamaño en pantalla</label>
+                <select id="tamano-visualizacion"></select>
+              </div>
+              <div class="campo">
+                <label for="ancho-impresion">Ancho impreso (mm)</label>
+                <input type="number" id="ancho-impresion" min="10" max="500" step="5" value="60" />
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="titulo-logo">
+            <h2 id="titulo-logo">Logo en el centro</h2>
+            <div class="ayuda">
+              <button type="button" class="ayuda-boton" aria-describedby="ayuda-logo"><span aria-hidden="true">?</span></button>
+              <div class="ayuda-texto" id="ayuda-logo" role="tooltip"></div>
+            </div>
+            <p class="pista" id="logo-ayuda">Opcional. Un logo tapa parte del código, así que sube la corrección de errores.</p>
+            <div class="campo">
+              <label for="logo-archivo">Archivo de imagen</label>
+              <input type="file" id="logo-archivo" accept="image/png,image/jpeg,image/webp" />
+            </div>
+            <p class="error" id="logo-error" hidden role="alert"></p>
+            <div id="logo-controles" hidden>
+              <div class="campo-par">
+                <div class="campo">
+                  <label for="logo-lado">Lado (módulos)</label>
+                  <input type="range" id="logo-lado" min="1" max="20" step="1" value="5" />
+                </div>
+                <div class="campo">
+                  <label for="logo-margen">Margen (módulos)</label>
+                  <input type="range" id="logo-margen" min="0" max="4" step="1" value="1" />
+                </div>
+              </div>
+              <div class="campo">
+                <label for="logo-forma">Forma</label>
+                <select id="logo-forma"></select>
+              </div>
+              <button type="button" id="logo-quitar" class="secundario">Quitar el logo</button>
+            </div>
+          </section>
+        </div>
+
+        <!-- ------------------------------------------------------------- -->
+        <!-- Columna de resultado                                             -->
+        <!-- ------------------------------------------------------------- -->
+        <div class="resultado">
+          <section class="panel vista" aria-labelledby="titulo-vista">
+            <h2 id="titulo-vista">Vista previa</h2>
+            <div class="ayuda">
+              <button type="button" class="ayuda-boton" aria-describedby="ayuda-vista"><span aria-hidden="true">?</span></button>
+              <div class="ayuda-texto" id="ayuda-vista" role="tooltip"></div>
+            </div>
+
+            <!--
+              El contenido exacto que ira dentro del codigo. Va antes que el
+              dibujo y en grande, porque es la unica forma de que quien va a
+              compartirlo vea lo que el telefono va a abrir.
+            -->
+            <div class="que-contiene" id="que-contiene">
+              <h3 id="que-contiene-titulo">Lo que lleva el código</h3>
+              <p class="que-aviso" id="que-aviso" hidden></p>
+              <output class="que-texto" id="que-texto"></output>
+              <p class="que-nota" id="que-nota" hidden></p>
+            </div>
+
+            <div class="lienzo-marco">
+              <canvas id="lienzo" width="512" height="512" role="img" aria-labelledby="titulo-lienzo"></canvas>
+            </div>
+            <p class="estado" id="estado" role="status"></p>
+            <h3 id="titulo-lienzo" class="visualmente-oculto">Código QR generado</h3>
+
+            <!--
+              Las descargas van aqui, dentro del panel del codigo, y no en un
+              panel aparte. En una tarjeta separada quedaban a una pantalla de
+              distancia de la imagen que descargas, y habia que recordarse de
+              bajar hasta ellas. Aqui el recorrido es ver el codigo, ver que se
+              lee y descargarlo, sin salir de la misma caja.
+            -->
+            <div class="descargas">
+              <button type="button" id="descargar-png">PNG</button>
+              <button type="button" id="descargar-svg">SVG</button>
+            </div>
+            <p class="pista" id="estado-descarga" role="status"></p>
+          </section>
+
+          <section class="panel" aria-labelledby="titulo-seguridad">
+            <h2 id="titulo-seguridad">Verificación de escaneabilidad</h2>
+            <div class="ayuda">
+              <button type="button" class="ayuda-boton" aria-describedby="ayuda-seguridad">
+                <span aria-hidden="true">?</span>
+              </button>
+              <div class="ayuda-texto" id="ayuda-seguridad" role="tooltip"></div>
+            </div>
+            <p class="veredicto" id="veredicto" role="status"></p>
+            <ul class="comprobaciones" id="comprobaciones"></ul>
+          </section>
+        </div>
+      </div>
+
+      <section class="panel faq-panel" aria-labelledby="titulo-faq">
+        <h2 id="titulo-faq">Preguntas frecuentes</h2>
+        <div class="faq" id="faq"></div>
+      </section>
+    </main>
+
+    <footer class="pie">
+      <div class="pie-centro">
+        <div class="pie-marca">
+          <svg class="pie-logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <rect x="1" y="1" width="13" height="13" rx="2" fill="currentColor" />
+            <rect x="18" y="1" width="13" height="13" rx="2" fill="currentColor" />
+            <rect x="1" y="18" width="13" height="13" rx="2" fill="currentColor" />
+            <rect x="5" y="5" width="5" height="5" rx="1" fill="var(--pie-fondo)" />
+            <rect x="22" y="5" width="5" height="5" rx="1" fill="var(--pie-fondo)" />
+            <rect x="5" y="22" width="5" height="5" rx="1" fill="var(--pie-fondo)" />
+            <rect x="18" y="18" width="5" height="5" rx="2" fill="currentColor" />
+            <rect x="26" y="18" width="5" height="5" rx="2" fill="currentColor" />
+            <rect x="18" y="26" width="5" height="5" rx="2" fill="currentColor" />
+            <rect x="26" y="26" width="5" height="5" rx="2" fill="currentColor" />
+          </svg>
+          <span class="pie-nombre" id="pie-nombre">Efímero</span>
+        </div>
+
+        <p class="pie-titulo" id="pie-titulo"></p>
+        <p class="pie-sub" id="pie-sub"></p>
+        <a class="pie-boton" id="pie-boton" href="#contenido"></a>
+      </div>
+
+      <div class="pie-legal">
+        <div class="pie-legal-fila">
+          <p id="pie-texto"></p>
+          <p class="pie-version" id="pie-version"></p>
+        </div>
+        <nav class="pie-enlaces" aria-label="Enlaces">
+          <a id="enlace-codigo" href="#" rel="noopener noreferrer">Código</a>
+          <a id="enlace-problemas" href="#" rel="noopener noreferrer">Problemas</a>
+          <a id="enlace-seguridad" href="#" rel="noopener noreferrer">Seguridad</a>
+          <a id="enlace-abuso" href="#" rel="noopener noreferrer">Denunciar abuso</a>
+          <a id="enlace-licencia" href="#" rel="noopener noreferrer">Licencia</a>
+          <a id="enlace-privacidad" href="#" rel="noopener noreferrer">Privacidad</a>
+          <a id="enlace-terceros" href="#" rel="noopener noreferrer">Créditos</a>
+        </nav>
+      </div>
+    </footer>
+
+    <!--
+      El codificador de QR va antes que el modulo de la aplicacion, y como script
+      clasico a proposito: es una libreria de un solo archivo que expone un
+      global, sin dependencias, y da igual que se ejecute de forma sincrona. El
+      orden importa porque `main.ts` lo usa nada mas arrancar.
+
+      Va con `defer` para no bloquear el dibujado del HTML, pero sin `async`:
+      con `async` el navegador podria ejecutarlo despues de `main.ts` y la
+      aplicacion arrancaria sin codificador. En el cuerpo, al final, ya se
+      ejecuta en orden.
+    -->
+    <script src="./vendor/qrcodegen.js"></script>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

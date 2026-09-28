@@ -1,0 +1,60 @@
+﻿# Dependencias (nunca se commitean: `npm ci` las reconstruye desde el lockfile)
+node_modules/
+
+# Artefactos de build
+dist/
+dist-ssr/
+*.local
+.vercel/
+
+# Tests
+coverage/
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
+# Cache de herramientas
+.vite/
+.cache/
+.eslintcache
+*.tsbuildinfo
+
+# Editores / SO  (el .idea de JetBrains se cuela si no se lista explicitamente)
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Historial local de editores. VSCode guarda ahi una copia de cada archivo en
+# cada guardado, y JetBrains hace lo mismo en su carpeta del sistema. Son
+# cientos de archivos que no aportan nada al repositorio.
+.history/
+*.bak
+*.tmp
+*~
+
+# Restos de resolver conflictos o de aplicar parches a mano
+*.orig
+*.rej
+
+# Sistema
+.env
+.env.*
+!.env.example
+
+# Registro
+#
+# Se ignora `*.log` en vez de listar uno por gestor de paquetes. npm, yarn y pnpm
+# escriben aqui cuando algo falla, y el nombre exacto depende del gestor y de
+# la version, asi que enumerarlos se queda corto antes o despues.
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

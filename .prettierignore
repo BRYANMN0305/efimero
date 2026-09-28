@@ -1,0 +1,20 @@
+# Archivos que no se reformatean nunca.
+#
+# El vendor es una copia sin modificar de una libreria de terceros. Formatearlo
+# lo separaria del original y haria que `check:vendor` dejara de poder
+# compararlo con su checksum. Aqui no se toca ni el codigo ni los tipos.
+src/vendor/
+public/vendor/
+
+# Salidas de compilacion y dependencias.
+dist/
+node_modules/
+coverage/
+playwright-report/
+test-results/
+
+# Los mapas de fuente los genera Vite y son de una sola linea.
+*.map
+
+# Archivos generados por el propio repositorio.
+package-lock.json

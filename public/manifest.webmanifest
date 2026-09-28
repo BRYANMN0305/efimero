@@ -1,0 +1,21 @@
+{
+  "name": "Efímero · Códigos QR para tu marca",
+  "short_name": "Efímero",
+  "description": "Crea códigos QR con tu logo y tus colores, y comprueba antes de imprimir que se van a leer. Sin cuentas, sin servidor y sin enviar nada.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fbfbfd",
+  "theme_color": "#5b3cc4",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

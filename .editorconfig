@@ -1,0 +1,29 @@
+# Configuracion de editor compartida. El objetivo es que el codigo se vea
+# igual en Windows, macOS y Linux sin depender del IDE de cada dev.
+#
+# Ver https://editorconfig.org
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Documentacion Markdown: no se recortan los espacios dobles porque Markdown
+# los usa para un salto de linea forzado dentro de un parrafo.
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{ts,js,mjs,cjs,json,css,html,yml,yaml}]
+indent_size = 2
+
+# El vendor de terceros se mantiene con su formato original (4 espacios) para
+# que el diff contra upstream sea limpio.
+[public/vendor/*.js]
+indent_size = 4
+trim_trailing_whitespace = false
+insert_final_newline = false

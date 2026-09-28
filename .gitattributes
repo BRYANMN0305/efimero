@@ -1,0 +1,30 @@
+# Normalizacion de fin de linea y codificacion.
+#
+# Sin esto, un archivo editado en Windows llega al repositorio con finales de
+# linea CRLF y con marca de orden de bytes (BOM), que es un caracter invisible
+# al principio del archivo. El BOM rompe el espanol de los HEADER de HTTP y el
+# `JSON.parse` de los archivos de configuracion, y el fallo aparece en el
+# despliegue y no en el portatil de quien lo escribio.
+#
+# `text=auto eol=lf` obliga a que todo archivo de texto se guarde con LF y sin
+# BOM, sin importar desde donde se edite.
+
+* text=auto eol=lf
+
+# Los formatos que no admiten normalizacion.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# El codigo de terceros se conserva tal cual lo publico el upstream, para que el
+# diff con el original sea legible. Su checksum lo verifica `npm run check:vendor`.
+public/vendor/*.js -text
+src/vendor/*.d.ts -text
+
+# El lockfile se trata como binario porque npm lo escribe con su propio formato
+# y no debe ser tocado por el filtro de fin de linea.
+package-lock.json -text

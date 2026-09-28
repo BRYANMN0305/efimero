@@ -1,0 +1,1073 @@
+/*
+ * Estilos de Efímero.
+ *
+ * Sin dependencias y sin tipografias externas: se pidió que la pagina no hable
+ * con ningun servidor, y una tipografia de Google seria una peticion de red en
+ * cada visita. Se usa la pila del sistema, que ademas es la que el sistema ya
+ * tiene descargada.
+ *
+ * Se respetan `prefers-color-scheme` y `prefers-reduced-motion`. El segundo no
+ * es un detalle: una parte de quien usa esto tiene algun problema de
+ * vestibulares, y una transicion de zoom puede darle.
+ */
+
+/*
+ * Paleta: violeta elegante sobre fondo claro.
+ *
+ * El morado es el color de marca, y el resto de la pagina esta montada alrededor
+ * para que no compita con el. Se eligio `#5b3cc4` y no un violeta mas vivo
+ * porque es el mas oscuro que sigue siendo elegante: con el da 7,27:1 sobre
+ * blanco, muy por encima del 4,5:1 que pide WCAG para texto normal, asi que el
+ * blanco de los botones y de los enlaces queda comodo sin tener que subir el
+ * peso de la letra. El violeta mas oscuro se reserva para el hover.
+ *
+ * Los grises de texto y de linea NO son morados, a proposito. Un gris
+ * ligeramente violeta en el cuerpo del texto desplaza la percepcion de la
+ * pagina entera y hace que el negro parezca azul; los grises se quedan
+ * neutros y el color vive en la marca, los enlaces y el foco.
+ *
+ * `--acento-suave` es el mismo violeta muy aclarado, para superficies de
+ * apoyo: la pestaña activa, los distintivos del hero. Al ser un tinte del
+ * propio acento, el conjunto se ve de una sola pieza.
+ */
+:root {
+  --fondo: #fbfbfd;
+  --fondo-tenue: #fbfbfd;
+  --panel: #ffffff;
+  --texto: #16181d;
+  --tenue: #5b6270;
+  --borde: #dfe3ea;
+  --acento: #5b3cc4;
+  --acento-fuerte: #4a2fa8;
+  --acento-suave: #efeaff;
+  --acento-contraste: #ffffff;
+  --ok: #0f7a4a;
+  --ok-fondo: #e6f6ee;
+  --aviso: #8a5a00;
+  --aviso-fondo: #fdf3df;
+  --peligro: #b3261e;
+  --peligro-fondo: #fdecea;
+  --radio: 10px;
+  --radio-grande: 10px;
+  --sombra: 0 1px 2px rgb(16 24 40 / 6%), 0 4px 12px rgb(16 24 40 / 4%);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/*
+ * El relleno horizontal NO va en `body`, va en cada contenedor.
+ *
+ * Con el padding en `body` el pie, que es la unica banda a sangre de la pagina,
+ * se quedaba metida un rem a cada lado y se veia el fondo del documento en los
+ * bordes. En el hero y en los paneles no se nota, porque son bloques centrados
+ * con ancho maximo y el recorte se confunde con margen de mas.
+ *
+ * `body` es una columna de flex de altura minima igual a la ventana, y `main`
+ * es el que crece. Asi el pie baja siempre hasta el final de la pantalla aunque
+ * el contenido no llegue a llenarla, que es lo que se llama pie pegado al
+ * fondo. Sin esto, en un monitor alto el pie se queda a media pagina con un
+ * trozo de blanco debajo, que parece que la pagina no ha terminado de cargar.
+ *
+ * Se usa `dvh` y no `vh` porque en movil la barra de direcciones aparece y
+ * desaparece: `vh` no tiene en cuenta ese hueco y deja el pie mas abajo de lo
+ * que cabe, obligando a hacer scroll para nada.
+ */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+.saltar {
+  position: absolute;
+  left: -9999px;
+}
+
+.saltar:focus {
+  left: 1rem;
+  top: 1rem;
+  z-index: 10;
+  padding: 0.5rem 0.75rem;
+  background: var(--acento);
+  color: var(--acento-contraste);
+  border-radius: var(--radio);
+}
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- Hero --- */
+
+/*
+ * El primer pantallazo decide si la pagina parece una tienda o un panel de
+ * control. Por eso el titular va grande y centrado, y el conversor arranca por
+ * debajo: primero se dice que esto hace y por que, y despues se usa.
+ *
+ * El ancho esta acotado a `ancho-lectura` a proposito. Un titular de pantalla
+ * completa en un monitor de 27 pulgadas deja lineas de 15 palabras y nadie lo
+ * lee entero; a 34rem caben en dos lineas comfortablemente.
+ */
+.hero {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 3.5rem 0 2.5rem;
+  text-align: center;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  /* El titular largo no debe partir el titular corto en dos palabras, que es
+     lo que hace un `text-wrap: balance` cuando el ancho es el natural. */
+  text-wrap: balance;
+}
+
+.hero p {
+  margin: 1.25rem auto 0;
+  max-width: 30rem;
+  color: var(--tenue);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/*
+ * Los distintivos aqui, no en la cabecera.
+ *
+ * Antes vivian en la barra de arriba, uno al lado del otro con el selector de
+ * idioma, y competian con la marca por la atencion. Bajo el subtitulo leen
+ * como argumentos de venta: son cinco razones en una linea y tienen aire.
+ */
+.hero .distintivos {
+  justify-content: center;
+  margin-top: 1.75rem;
+}
+
+/* --- Cabecera --- */
+
+.cabecera {
+  flex: none;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 1rem;
+}
+
+.marca {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.marca-logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--texto);
+}
+
+.marca h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.marca p {
+  margin: 0;
+  color: var(--tenue);
+  font-size: 0.875rem;
+}
+
+.cabecera-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.distintivos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.distintivos li {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--acento) 18%, var(--borde));
+  border-radius: 999px;
+  background: var(--acento-suave);
+  color: var(--acento-fuerte);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.idioma {
+  display: flex;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+}
+
+.idioma button {
+  border: 0;
+  background: var(--panel);
+  color: var(--tenue);
+  padding: 0.4rem 0.7rem;
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.idioma button[aria-pressed="true"] {
+  background: var(--acento);
+  color: var(--acento-contraste);
+}
+
+/*
+ * El boton de idioma activo y los botones de descarga llevan el morado de
+ * marca. Se usa `--acento-fuerte` al pasar el raton en vez de aclarar el
+ * relleno con un filtro: `filter: brightness` aclararia tambien el texto
+ * blanco y lo dejaria en un gris sucio. Oscurecer el morado mantiene el
+ * contraste del texto intacto.
+ */
+button:not(:disabled):hover {
+  filter: brightness(1.08);
+}
+
+.idioma button[aria-pressed="true"]:hover,
+button:not(.secundario):not(:disabled):hover {
+  background: var(--acento-fuerte);
+  filter: none;
+}
+
+/* --- Disposicion --- */
+
+/*
+ * `main` es el trozo que crece: absorbe el espacio que sobra y empuja el pie
+ * al final de la ventana. `flex-grow` con base `auto` para que, cuando el
+ * contenido es mas alto que la pantalla, crezca lo que haga falta y la pagina
+ * siga teniendo scroll normal en vez de comprimir los paneles.
+ */
+main {
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.disposicion {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 62rem) {
+  .disposicion {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .controles,
+  .resultado {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+.controles,
+.resultado {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  padding: 1.25rem 1.375rem 1.5rem;
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-grande);
+  box-shadow: var(--sombra);
+}
+
+.panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.panel h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--tenue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* --- Campos --- */
+
+.campo {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.campo-par {
+  display: grid;
+  gap: 0 0.75rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.campo label {
+  color: var(--tenue);
+  font-size: 0.8125rem;
+}
+
+.campo.interruptor {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.campo.interruptor label {
+  color: var(--texto);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  background: var(--fondo);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.9375rem;
+}
+
+textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+input[type="color"] {
+  width: 100%;
+  height: 2.4rem;
+  padding: 2px;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--acento);
+}
+
+.pista {
+  margin: 0.5rem 0 0;
+  color: var(--tenue);
+  font-size: 0.8125rem;
+}
+
+/*
+ * Nota viva de un campo.
+ *
+ * Se ve como la pista general, pero pegada a su campo y con la cifra
+ * destacada: el numero es lo que cambia al escribir, y si va igual que el
+ * resto de la frase no se ve que se esta actualizando.
+ */
+.nota-campo {
+  margin: 0.25rem 0 0;
+  color: var(--tenue);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.error {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.625rem;
+  background: var(--peligro-fondo);
+  color: var(--peligro);
+  border-radius: 8px;
+  font-size: 0.8125rem;
+}
+
+/* --- Pestanias --- */
+
+.pestanias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.875rem;
+  border-bottom: 1px solid var(--borde);
+}
+
+.pestanias button {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--tenue);
+  padding: 0.4rem 0.6rem;
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.pestanias button[aria-selected="true"] {
+  border-bottom-color: var(--acento);
+  color: var(--acento);
+  font-weight: 600;
+}
+
+/* --- Lo que lleva el codigo --- */
+
+.que-contiene {
+  padding: 0.75rem;
+  margin-bottom: 0.875rem;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+}
+
+.que-aviso {
+  margin: 0 0 0.5rem;
+  padding: 0.4rem 0.55rem;
+  background: var(--peligro-fondo);
+  color: var(--peligro);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.que-texto {
+  display: block;
+  font-family: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+  font-size: 1rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  /* El contenido exacto, con el esquema en su propia linea. Es lo que va a
+     abrir el telefono, y tiene que leerse de un vistazo. */
+  word-break: break-word;
+}
+
+.que-texto .esquema {
+  display: inline-block;
+  margin-right: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 5px;
+  background: var(--acento);
+  color: var(--acento-contraste);
+  font-weight: 700;
+}
+
+.que-texto .subdominio,
+.que-texto .sufijo {
+  color: var(--tenue);
+}
+
+.que-texto .registrable {
+  padding: 0 0.1rem;
+  background: color-mix(in srgb, var(--acento) 16%, transparent);
+  border-radius: 3px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.que-nota {
+  margin: 0.5rem 0 0;
+  color: var(--tenue);
+  font-size: 0.75rem;
+}
+
+/* --- Lienzo --- */
+
+.lienzo-marco {
+  display: grid;
+  place-items: center;
+  padding: 0.75rem;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+}
+
+#lienzo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.estado {
+  margin: 0.625rem 0 0;
+  color: var(--tenue);
+  font-size: 0.8125rem;
+  min-height: 1.3em;
+}
+
+.estado[data-tono="ok"] {
+  color: var(--ok);
+}
+
+.estado[data-tono="aviso"] {
+  color: var(--aviso);
+}
+
+.estado[data-tono="peligro"] {
+  color: var(--peligro);
+}
+
+/* --- Verificacion --- */
+
+.veredicto {
+  margin: 0 0 0.625rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.veredicto[data-nivel="safe"] {
+  background: var(--ok-fondo);
+  color: var(--ok);
+}
+
+.veredicto[data-nivel="caution"] {
+  background: var(--aviso-fondo);
+  color: var(--aviso);
+}
+
+.veredicto[data-nivel="blocked"] {
+  background: var(--peligro-fondo);
+  color: var(--peligro);
+}
+
+.comprobaciones {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comprobaciones li {
+  display: grid;
+  grid-template-columns: 1.1rem 1fr;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.comprobaciones .marca-estado {
+  font-weight: 700;
+  text-align: center;
+}
+
+.comprobaciones li[data-tipo="ok"] .marca-estado {
+  color: var(--ok);
+}
+
+.comprobaciones li[data-tipo="aviso"] .marca-estado {
+  color: var(--aviso);
+}
+
+.comprobaciones li[data-tipo="fallo"] {
+  color: var(--peligro);
+}
+
+.comprobaciones li[data-tipo="fallo"] .marca-estado {
+  color: var(--peligro);
+}
+
+.comprobaciones strong {
+  font-weight: 600;
+}
+
+.comprobaciones .detalle {
+  color: var(--tenue);
+}
+
+/* --- Descargas --- */
+
+/*
+ * Los botones van dentro del panel del codigo, no en una tarjeta aparte, asi que
+ * se separan del estado de comprobacion con un margen y un filete. Sin esa
+ * separacion los botones se leen como parte del texto de arriba en vez de como
+ * la accion para la que estan.
+ */
+.descargas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--borde);
+}
+
+/* El aviso de la descarga va pegado a los botones, sin la pista separada de antes. */
+#estado-descarga {
+  margin-top: 0.625rem;
+}
+
+button {
+  padding: 0.55rem 0.9rem;
+  background: var(--acento);
+  color: var(--acento-contraste);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.secundario {
+  background: var(--panel);
+  color: var(--texto);
+  border-color: var(--borde);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* --- Ayuda de las tarjetas --- */
+
+/*
+ * El boton `?` va en la esquina de la tarjeta, no junto al texto que explica.
+ * Todas las tarjetas tienen el mismo esquema: titulo a la izquierda, `?` a la
+ * derecha. Si el `?` fuera al final del titulo, cada explicacion se leeria en un
+ * sitio distinto y las tarjetas dejarian de alinearse entre si.
+ *
+ * Es un boton y no un desplegable por dos motivos. Al hacer clic el boton recibe
+ * el foco, y el tooltip se muestra con `:focus`, con lo que el clic tambien lo
+ * abre sin ningun JavaScript. Y con `:hover` aparece al pasar el raton, que es
+ * lo que se espera de un `?`. El texto lleva `role="tooltip"` y el boton lo
+ * referencia con `aria-describedby`, que es como un lector de pantalla anuncia
+ * "boton, ? , y esta es su descripcion".
+ *
+ * El tooltip se ancla a la IZQUIERDA del boton y centrado en vertical. Asi
+ * crece hacia el interior de la tarjeta y nunca se sale por el borde derecho,
+ * que es justo donde esta el boton, ni por arriba o por abajo.
+ */
+.panel {
+  position: relative;
+}
+
+.panel > h2 {
+  /* Deja sitio al `?` para que un titulo largo como "Verificacion de
+     escaneabilidad" no se meta debajo. */
+  padding-right: 1.75rem;
+}
+
+.ayuda {
+  position: absolute;
+  top: 0.875rem;
+  right: 0.875rem;
+  z-index: 2;
+}
+
+.ayuda-boton {
+  display: grid;
+  place-items: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  padding: 0;
+  border: 1px solid var(--borde);
+  border-radius: 50%;
+  background: var(--fondo);
+  color: var(--tenue);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  transition:
+    border-color 120ms ease,
+    color 120ms ease,
+    background-color 120ms ease;
+}
+
+.ayuda-boton:hover,
+.ayuda-boton:focus-visible {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+.ayuda-boton:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+/* El clic deja el boton con foco, asi que el tooltip se queda abierto. */
+.ayuda-boton:focus {
+  background: var(--acento);
+  border-color: var(--acento);
+  color: var(--acento-contraste);
+}
+
+.ayuda-texto {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 0.625rem);
+  z-index: 3;
+  width: 17rem;
+  max-width: 62vw;
+  margin: 0;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--panel);
+  box-shadow: 0 10px 30px rgb(16 24 40 / 14%);
+  color: var(--texto);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  text-align: left;
+  text-wrap: pretty;
+
+  /* Oculto pero no fuera del flujo: `visibility` lo saca del arbol de
+     accesibilidad y del tabulador, y opacity lo deja Mostrar sin saltos. */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-50%) scale(0.98);
+  transform-origin: right center;
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease,
+    visibility 120ms ease;
+}
+
+/* La punta del tooltip, apuntando al boton. */
+.ayuda-texto::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -0.3125rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--panel);
+  border-top: 1px solid var(--borde);
+  border-right: 1px solid var(--borde);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.ayuda:hover .ayuda-texto,
+.ayuda-boton:focus-visible + .ayuda-texto,
+.ayuda-boton:focus + .ayuda-texto {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+/*
+ * Escape lo ha cerrado. Va DESPUES de la regla anterior y con la misma
+ * especificidad, asi que gana por orden: mientras el raton siga encima del
+ * boton, `:hover` lo volveria a mostrar y Escape no serviria de nada.
+ */
+.ayuda[data-oculto] .ayuda-texto {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-50%) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ayuda-texto,
+  .ayuda-boton {
+    transition: none;
+  }
+}
+
+/* --- FAQ --- */
+
+/*
+ * `main` es un bloque normal y no una columna de flex, asi que sus secciones se
+ * apilan sin ningun hueco entre ellas: el panel de preguntas se tocaba con las
+ * columnas de arriba. El margen va aqui, en la seccion que va suelta, y no como
+ * separacion general en `main`, para no abrir huecos dentro de las columnas, que
+ * ya llevan su propio `gap`.
+ */
+.faq-panel {
+  margin-top: 1.5rem;
+}
+
+.faq {
+  display: grid;
+  gap: 0.875rem;
+  grid-template-columns: 1fr;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 48rem) {
+  .faq {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.25rem;
+  }
+}
+
+.faq details {
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  background: var(--fondo-tenue);
+  padding: 0.25rem 0.875rem;
+}
+
+.faq details[open] {
+  background: var(--acento-suave);
+  border-color: color-mix(in srgb, var(--acento) 28%, var(--borde));
+}
+
+.faq summary {
+  display: flex;
+  gap: 0.625rem;
+  padding: 0.7rem 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--texto);
+  cursor: pointer;
+  list-style: none;
+}
+
+/* El triangulo del navegador se sustituye por un signo mas que gira. */
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::before {
+  content: "+";
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.1rem;
+  border-radius: 50%;
+  background: var(--acento);
+  color: var(--acento-contraste);
+  font-weight: 700;
+  line-height: 1.2rem;
+  text-align: center;
+}
+
+.faq details[open] summary::before {
+  content: "\2212";
+}
+
+.faq details p {
+  margin: 0 0 0.8rem;
+  color: var(--tenue);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/*
+ * El pie es el cierre de la pagina y lo que se recuerda de ella, asi que va
+ * centrado y con una sola idea: un titular, una frase y un boton. Todo en el
+ * eje central.
+ *
+ * Antes era una rejilla de dos columnas con la marca a la izquierda y el texto
+ * a la derecha, y no funcionaba: el hueco entre ambos era enorme y el titulo
+ * empezaba a un 40% del ancho, asi que se leia como si le faltara algo por
+ * poner. Centrado no deja sitio vacio que rellenar.
+ *
+ * El fondo es un degradado vertical muy corto, no un diagonal. El diagonal
+ * repartia el morado de forma desigual, con la esquina mas clara pegada al
+ * logo y la mas oscura en la esquina vacia, y eso ensucia en vez de dar
+ * profundidad. Un degradado de arriba abajo se lee como iluminacion, que es lo
+ * que se quiere.
+ *
+ * El texto va en blanco sobre `#4a2fa8`, que da 9,21:1: muy por encima del
+ * 4,5:1 que pide WCAG para texto normal, con lo que el blanco se lee comodo
+ * incluso con el brillo bajo.
+ *
+ * `--pie-fondo` es el morado de la banda, no el fondo de la pagina. El logo
+ * recorta cuatro huecos con ese color; con el del fondo saldrian blancos
+ * recortando recuadros en medio de la franja.
+ */
+.pie {
+  --pie-fondo: #4a2fa8;
+  flex: none;
+  width: 100%;
+  margin: 4rem 0 0;
+  padding: 3.5rem 1.5rem 1.75rem;
+  background: linear-gradient(180deg, #5537b8 0%, #4a2fa8 55%, #3f2890 100%);
+  color: #ffffff;
+  text-align: center;
+}
+
+.pie-centro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+/* La marca, pequeña y centrada sobre el titular. */
+.pie-marca {
+  display: inline-flex;
+  gap: 0.625rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+}
+
+.pie-logo {
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+}
+
+.pie-nombre {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.pie-titulo {
+  margin: 0;
+  /* Sin tope de `ch`: 22ch partia el titular en trozos de dos palabras, que es
+     lo que hacia que se leyera como una lista y no como una frase. El ancho se
+     da en `rem` para que el titular quepa entero en una linea con su tipografia
+     grande, y no dependa de cuanto mide el caracter promedio. */
+  max-width: 36rem;
+  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+  font-weight: 750;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.pie-sub {
+  margin: 0.875rem 0 1.75rem;
+  max-width: 34rem;
+  color: rgb(255 255 255 / 80%);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.pie-boton {
+  display: inline-block;
+  padding: 0.8rem 1.75rem;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #3f2890;
+  font-size: 0.9375rem;
+  font-weight: 650;
+  text-decoration: none;
+  box-shadow:
+    0 1px 2px rgb(24 12 60 / 18%),
+    0 8px 20px rgb(24 12 60 / 22%);
+}
+
+/*
+ * Cada tipo de enlace lleva su color. No se pone un `.pie a { color: #fff }`
+ * para los enlaces del pie: esa regla es mas especifica que `.pie-boton`
+ * (0,1,1 contra 0,1,0), le ganaba el color y dejaba el boton con texto blanco
+ * sobre fondo blanco, invisible pero con el texto bien en el DOM, que es lo que
+ * hace que parezca un fallo de traduccion.
+ */
+.pie-boton:hover {
+  background: #f1ecff;
+  color: #3f2890;
+}
+
+.pie-legal {
+  display: grid;
+  gap: 0.75rem 1.5rem;
+  max-width: 72rem;
+  margin: 2.75rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(255 255 255 / 16%);
+  color: rgb(255 255 255 / 62%);
+  font-size: 0.8125rem;
+  text-align: left;
+}
+
+.pie-legal-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.pie-legal p {
+  margin: 0;
+}
+
+.pie-version {
+  font-variant-numeric: tabular-nums;
+}
+
+.pie-enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+}
+
+.pie-enlaces a {
+  color: rgb(255 255 255 / 80%);
+  text-decoration-color: rgb(255 255 255 / 30%);
+}
+
+.pie-enlaces a:hover {
+  color: #ffffff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  button,
+  .pestanias button {
+    transition:
+      filter 120ms ease,
+      background-color 120ms ease;
+  }
+}
